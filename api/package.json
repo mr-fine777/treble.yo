@@ -8,7 +8,7 @@
     "vercel-build": "echo hello"
   },
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   },
   "dependencies": {
     "express": "^4.18.2",
