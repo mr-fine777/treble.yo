@@ -8,7 +8,7 @@
   ],
   "routes": [
     {
-      "src": "/.*",
+      "src": "/upload",
       "methods": ["OPTIONS"],
       "headers": {
         "Access-Control-Allow-Origin": "https://treble.top",
@@ -16,8 +16,7 @@
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Max-Age": "86400"
       },
-      "status": 200,
-      "continue": true
+      "status": 200
     },
     {
       "src": "/(.*)",
