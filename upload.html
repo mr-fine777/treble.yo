@@ -271,11 +271,10 @@ Pink: #f1d4d1, #d8bbb8, #a68986
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ' // Add empty bearer token if needed
+            'Accept': 'application/json'
           },
           mode: 'cors',
-          credentials: 'include',
+          credentials: 'same-origin',
           body: JSON.stringify(formData)
         });
         
