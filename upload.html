@@ -270,11 +270,9 @@ Pink: #f1d4d1, #d8bbb8, #a68986
         const response = await fetch('https://treble-yo.vercel.app/upload', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Content-Type': 'application/json'
           },
           mode: 'cors',
-          credentials: 'same-origin',
           body: JSON.stringify(formData)
         });
         
