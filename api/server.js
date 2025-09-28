@@ -7,17 +7,24 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// Middleware
+// CORS Middleware
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'https://treble.top');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
     next();
 });
+
+// Handle OPTIONS requests
+app.options('*', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://treble.top');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.status(200).end();
+});
+
 app.use(express.json());
 
 // Read bad words list
