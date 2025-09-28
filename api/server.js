@@ -7,22 +7,21 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// CORS Middleware
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://treble.top');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    next();
+// Enable pre-flight requests for all routes
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', 'https://treble.top');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Max-Age', '86400');
+    res.status(200).send();
 });
 
-// Handle OPTIONS requests
-app.options('*', (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://treble.top');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.status(200).end();
+// CORS Middleware for all other requests
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://treble.top');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
 });
 
 app.use(express.json());
