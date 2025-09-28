@@ -41,20 +41,27 @@ const badWords = fs.readFileSync(path.join(__dirname, '../public/badwords.txt'),
     .filter(word => word.trim() !== '');
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://hubberhubber:fygu34f4gy3ufg2uyhfb3guy4ghf782ufh434fbt2g3yu24bh2y4g@cluster0.914ex.mongodb.net/Treble?retryWrites=true&w=majority&appName=Cluster0', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 30000, // Increased timeout
-    socketTimeoutMS: 45000,
-    family: 4 // Force IPv4
-})
-.then(() => {
-    console.log('Successfully connected to MongoDB.');
-})
-.catch(err => {
-    console.error('MongoDB connection error:', err);
-    // Keep the server running even if MongoDB fails to connect initially
-});
+// Connect to MongoDB using the MONGODB_URI environment variable only.
+// Do NOT keep any production credentials in source code.
+const mongodbUri = process.env.MONGODB_URI;
+if (!mongodbUri) {
+    console.error('MONGODB_URI environment variable is not set. Skipping MongoDB connection.');
+} else {
+    mongoose.connect(mongodbUri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 30000, // Increased timeout
+        socketTimeoutMS: 45000,
+        family: 4 // Force IPv4
+    })
+    .then(() => {
+        console.log('Successfully connected to MongoDB.');
+    })
+    .catch(err => {
+        console.error('MongoDB connection error:', err);
+        // Keep the server running even if MongoDB fails to connect initially
+    });
+}
 
 // Handle MongoDB connection events
 mongoose.connection.on('error', err => {
