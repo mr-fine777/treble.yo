@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -563,3 +564,570 @@ Pink: #f1d4d1, #d8bbb8, #a68986
   </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 60/30/10 pallete: 
+White: #efeee5, #bdbcb3, #f8f8f3
+Blue: #687993, #9aabc5, #ccddf7
+Pink: #f1d4d1, #d8bbb8, #a68986
+-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Title of the webpage -->
+  <title>Treble.top</title>
+  
+  <!-- Light mode favicon -->
+  <link rel="icon" href="img/favicon-light.png" media="(prefers-color-scheme: light)">
+
+  <!-- Dark mode favicon -->
+  <link rel="icon" href="img/favicon-dark.png" media="(prefers-color-scheme: dark)">
+
+  <!-- Meta tags for SEO -->
+  <meta name="description" content="Browse and Upload Crochet patterns for free!">
+  <meta name="author" content="James Conway">
+  
+  <!-- Basic styling -->
+  <style>
+    @font-face {
+      font-family: 'Treblemaniac';
+      src: url('/local/MontserratAlternates-Medium.ttf') format('truetype');
+    }
+
+    .search-results {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+      height: 100%;
+      gap: 60px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .search-results {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Treblemaniac', sans-serif;
+      background-color: #f1d4d1;
+      background-image: url("img/thread.png");
+      background-repeat: repeat;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    p {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    header {
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .logo-container img {
+      width: 80px;
+      height: auto;
+      z-index: 90;
+      margin-left: -20px;
+    }
+    .logo-text {
+      color: #687993;
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .upload-btn {
+      font-family: 'Treblemaniac', sans-serif;
+      z-index: 90;
+      color: #687993;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: transparent;
+      font-size:20px;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: color 0.3s;
+      font-weight: bold;
+    }
+    .upload-btn:hover {
+      color: #9aabc5;
+    }
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 2rem;
+      min-height: 60vh;
+    }
+    .search-container {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+    .search-results-container {
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+
+    }
+    .search-results {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* Ensures 3 items per row */
+      gap: 30px; /* Uniform gap for both vertical and horizontal */
+      justify-content: center; /* Ensures the grid is centered */
+    }
+    @media screen and (max-width: 768px) {
+      .search-results {
+        grid-template-columns: 1fr;
+        max-width: 600px;
+        gap: 30px;  /* Only vertical gap needed for single column */
+        margin-left: -30px;
+
+        .calling-card {
+          padding: 2rem;
+        }
+      }
+    }
+    
+    .search-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .search-input {
+      font-family: 'Treblemaniac', sans-serif;
+      color: #687993;
+      background-color: #f8f8f3;
+      width: 100%;
+      padding: 15px;
+      padding-right: 50px; /* Make room for the button */
+      border: 2px solid #687993;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      -webkit-appearance: none; /* Remove default styling on Webkit browsers */
+      appearance: none; /* Remove default styling */
+    }
+
+    /* Remove the 'x' button in IE */
+    .search-input::-ms-clear,
+    .search-input::-ms-reveal {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    /* Remove the 'x' button in Chrome */
+    .search-input::-webkit-search-decoration,
+    .search-input::-webkit-search-cancel-button,
+    .search-input::-webkit-search-results-button,
+    .search-input::-webkit-search-results-decoration {
+      display: none;
+    }
+
+    .search-input:focus {
+      border-color: #9aabc5;
+    }
+
+    .search-button {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #687993;
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.3s;
+    }
+
+    .search-button:hover {
+      color: #9aabc5;
+    }
+
+    .search-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    @media screen and (max-width: 480px) {
+      .search-input {
+        font-size: 14px;
+        padding: 12px;
+        padding-right: 40px;
+      }
+
+      .search-button {
+        right: 8px;
+        padding: 6px;
+      }
+
+      .search-icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .liner {
+      top: 42px;
+      left: 80px;
+      position: absolute;
+      width: calc(100% - 300px);  /* Adjust based on upload button position */
+    }
+
+    .liner-right {
+      top: 42px;
+      right: 0;
+      position: absolute;
+      width: 20px;  /* Adjust based on desired width */
+    }
+
+    hr {
+      position: absolute;
+      width: 100%;
+      color: #687993;
+      margin: 0;
+      border: 1px solid #687993;
+    }
+    
+    .line1 {
+      top: 0;
+    }
+    .line2 {
+      top: 15px;
+    }
+    .line3 {
+      top: 30px;
+    }
+
+  .calling-card {
+      width: 100%;
+      display: flex;
+      text-align: left;
+      font-family: 'Treblemaniac', sans-serif;
+      color: #687993;
+      background-color: #f8f8f3;
+      padding: 15px;
+      border: 2px solid #687993;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+      transition: 0.3s;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin: 0 auto;
+      max-width: 450px;
+      gap: 20px;
+      height: 250px;
+  }
+
+  .calling-card:hover {
+      scale: 1.01;
+      border-color: #9aabc5;
+  }
+
+  .card-thumbnail {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 15px;
+      border: 2px solid #687993;
+  }
+
+  .card-thumbnail-placeholder {
+      width: 100px;
+      height: 100px;
+      background-color: #d8bbb8;
+      border-radius: 15px;
+      border: 2px solid #687993;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #687993;
+      font-size: 12px;
+      text-align: center;
+      padding: 10px;
+  }
+
+  .card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+      position: relative;
+      padding-bottom: 45px;
+  }
+
+  .card-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+  }
+
+  .card-author {
+      font-size: 14px;
+      margin: 0;
+  }
+
+  .card-description {
+      font-size: 14px;
+      margin: 0;
+      color: #9aabc5;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+  }
+
+  .card-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+  }
+
+  .pattern-view {
+      font-family: 'Treblemaniac', sans-serif;
+      background-color: #f8f8f3;
+      color: #687993;
+      width: calc(100% - 40px);
+      padding: 15px;
+      border: 2px solid #687993;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+      transition: 0.3s;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      margin-left: 0px;
+      margin-right: 0px;
+      position: absolute;
+      bottom: 0;
+      margin-bottom: 50px;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+    .pattern-view:hover {
+    border-color: #9aabc5;
+    color: #9aabc5;
+  }
+
+  .result-item {
+      display: flex;
+      align-items: center;
+      background-color: #f8f8f3;
+      padding: 10px;
+      border: 2px solid #687993;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: border-color 0.3s;
+      width: 100%;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .result-item:hover {
+      border-color: #9aabc5;
+    }
+
+    .thumbnail {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 15px;
+    }
+
+    .result-details {
+      flex: 1;
+    }
+
+    .result-details h3 {
+      margin: 0 0 5px 0;
+      font-size: 18px;
+      color: #687993;
+    }
+
+    .result-details p {
+      margin: 5px 0;
+      color: #333;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="liner">
+      <hr class="line1"></hr>
+      <hr class="line2"></hr>
+      <hr class="line3"></hr>
+    </div>
+    <div class="liner-right">
+      <hr class="line1"></hr>
+      <hr class="line2"></hr>
+      <hr class="line3"></hr>
+    </div>
+    <div class="logo-container">
+      <a href="index.html">
+    <img src="img/icon.png" alt="treble.yo Logo">
+      </a>
+    </div>
+    <a href="upload.html">
+      <button class="upload-btn">Upload Pattern</button>
+    </a>
+  </header>
+
+  <main>
+    <div class="search-container">
+        <p class="logo-text">treble.yo</p>
+      <div class="search-wrapper">
+        <input type="search" class="search-input" id="searchInput" placeholder="Search for crochet patterns..." aria-label="Search patterns">
+        <button class="search-button" aria-label="Search">
+          <img src="img/mag.png" alt="Search" class="search-icon">
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <div class="search-results-container">
+    <div class="search-results" id="searchResults">
+      <!-- Search results will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    let searchTimeout;
+
+    // Debounce function to prevent too many API calls
+    function debounce(func, wait) {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(func, wait);
+    }
+
+    // Function to create a pattern card
+    function createPatternCard(pattern) {
+      const truncatedDescription = pattern.description.length > 152 
+        ? pattern.description.substring(0, 152) + '...'
+        : pattern.description;
+      
+      return `
+        <div class="calling-card">
+          ${pattern.thumbnailUrl ? 
+            `<img src="${pattern.thumbnailUrl}" alt="${pattern.patternName}" class="card-thumbnail">` :
+            `<div class="card-thumbnail-placeholder">No thumbnail available</div>`
+          }
+          <div class="card-content" style="word-wrap: break-word; overflow-wrap: break-word;">
+            <h2 class="card-title">${pattern.patternName}</h2>
+            <p class="card-author">By ${pattern.authorName}</p>
+            <p class="card-description" style="max-width: 300px;">${truncatedDescription}</p>
+            <a href="view-post.html?slug=${pattern.slug}" class="pattern-view">View Pattern</a>
+          </div>
+        </div>
+      `;
+    }
+
+    // Search handler
+    async function handleSearch() {
+      const query = searchInput.value.trim();
+      
+      if (query.length === 0) {
+        searchResults.innerHTML = '';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          if (data.length === 0) {
+            searchResults.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #687993;">No patterns found</p>';
+          } else {
+            searchResults.innerHTML = data.map(pattern => createPatternCard(pattern)).join('');
+          }
+        } else {
+          console.error('Search failed:', data.error);
+        }
+      } catch (error) {
+        console.error('Error performing search:', error);
+      }
+    }
+
+    // Initialize search on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchButton = document.querySelector('.search-button');
+        
+        // Add event listener with debounce for input changes
+        searchInput.addEventListener('input', () => {
+            debounce(handleSearch, 300);
+        });
+
+        // Trigger search on Enter key press
+        searchInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form submission
+                handleSearch();
+            }
+        });
+
+        // Trigger search on button click
+        if (searchButton) {
+            searchButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                handleSearch();
+            });
+        }
+        
+        // Clear results when input is cleared
+        searchInput.addEventListener('change', () => {
+            if (!searchInput.value.trim()) {
+                searchResults.innerHTML = '';
+            }
+        });
+    });
+  </script>
+</body>
+</html>
+>>>>>>> edd8791 (fix: add static build and root route for Vercel)
