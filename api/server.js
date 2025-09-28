@@ -9,9 +9,9 @@ const port = 3000;
 
 // Middleware
 app.use(cors({
-    origin: ['https://treble.top', 'https://treble-yo.vercel.app', 'http://localhost:3000', 'https://treble.top'],
+    origin: ['https://treble.top', 'https://treble-yo.vercel.app', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true,
     optionsSuccessStatus: 200
 }));
