@@ -423,7 +423,7 @@ Pink: #f1d4d1, #d8bbb8, #a68986
         }
 
         try {
-            const response = await fetch(`https://treble-yo.vercel.app/like/${slug}`, {
+            const response = await fetch(`https://treble.top/like/${slug}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -456,7 +456,7 @@ Pink: #f1d4d1, #d8bbb8, #a68986
         }
 
         try {
-            const response = await fetch(`https://treble-yo.vercel.app/pattern/${slug}`);
+            const response = await fetch(`https://treble.top/pattern/${slug}`);
             if (!response.ok) {
                 throw new Error('Pattern not found');
             }
