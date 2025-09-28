@@ -109,13 +109,16 @@ function isValidFileType(url) {
     return validExtensions.includes(extension);
 }
 
+// API route prefix used on Vercel (Vercel forwards /api/* to this file and keeps the prefix)
+const API_PREFIX = '/api';
+
 // Test route
-app.get('/', (req, res) => {
+app.get(`${API_PREFIX}/`, (req, res) => {
     res.json({ message: 'Treble.yo API is running' });
 });
 
 // Get pattern by slug
-app.get('/pattern/:slug', async (req, res) => {
+app.get(`${API_PREFIX}/pattern/:slug`, async (req, res) => {
     try {
         const pattern = await Pattern.findOne({ slug: req.params.slug });
         if (!pattern) {
@@ -129,7 +132,7 @@ app.get('/pattern/:slug', async (req, res) => {
 });
 
 // Search endpoint
-app.get('/search', async (req, res) => {
+app.get(`${API_PREFIX}/search`, async (req, res) => {
     try {
         const query = req.query.q;
         if (!query) {
@@ -156,7 +159,7 @@ app.get('/search', async (req, res) => {
 });
 
 // Upload endpoint
-app.post('/upload', async (req, res) => {
+app.post(`${API_PREFIX}/upload`, async (req, res) => {
     try {
         const { patternUrl, patternName, authorName, description, slug, thumbnailUrl } = req.body;
 
@@ -215,7 +218,7 @@ app.post('/upload', async (req, res) => {
 });
 
 // Like endpoint
-app.post('/like/:slug', async (req, res) => {
+app.post(`${API_PREFIX}/like/:slug`, async (req, res) => {
     try {
         const pattern = await Pattern.findOne({ slug: req.params.slug });
         if (!pattern) {
