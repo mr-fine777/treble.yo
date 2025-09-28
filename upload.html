@@ -271,7 +271,9 @@ Pink: #f1d4d1, #d8bbb8, #a68986
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json'
           },
+          mode: 'cors',
           body: JSON.stringify(formData)
         });
         
