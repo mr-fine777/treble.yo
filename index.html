@@ -10,7 +10,7 @@ Pink: #f1d4d1, #d8bbb8, #a68986
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- Title of the webpage -->
-  <title>treble.top</title>
+  <title>Treble.top</title>
   
   <!-- Light mode favicon -->
   <link rel="icon" href="img/favicon-light.png" media="(prefers-color-scheme: light)">
@@ -442,7 +442,7 @@ Pink: #f1d4d1, #d8bbb8, #a68986
     </div>
     <div class="logo-container">
       <a href="index.html">
-    <img src="img/icon.png" alt="treble.top Logo">
+    <img src="img/icon.png" alt="treble.yo Logo">
       </a>
     </div>
     <a href="upload.html">
@@ -452,7 +452,7 @@ Pink: #f1d4d1, #d8bbb8, #a68986
 
   <main>
     <div class="search-container">
-        <p class="logo-text">treble.top</p>
+        <p class="logo-text">treble.yo</p>
       <div class="search-wrapper">
         <input type="search" class="search-input" id="searchInput" placeholder="Search for crochet patterns..." aria-label="Search patterns">
         <button class="search-button" aria-label="Search">
@@ -511,7 +511,7 @@ Pink: #f1d4d1, #d8bbb8, #a68986
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/search?q=${encodeURIComponent(query)}`);
+        const response = await fetch(`https://treble-yo.vercel.app/search?q=${encodeURIComponent(query)}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -563,4 +563,3 @@ Pink: #f1d4d1, #d8bbb8, #a68986
   </script>
 </body>
 </html>
-
