@@ -23,10 +23,24 @@ Pink: #f1d4d1, #d8bbb8, #a68986
   <meta name="author" content="James Conway">
   
   <!-- Basic styling -->
+  <!-- Preload the font so it loads early -->
+  <link rel="preload" href="./local/MontserratAlternates-Medium.ttf" as="font" type="font/ttf" crossorigin>
   <style>
     @font-face {
       font-family: 'Treblemaniac';
-      src: url('/local/MontserratAlternates-Medium.ttf') format('truetype');
+      /* Relative path first helps when opening the file locally (file://).
+         Keep absolute root path as fallback for deployed sites. */
+      src: url('./local/MontserratAlternates-Medium.ttf') format('truetype'),
+           url('/local/MontserratAlternates-Medium.ttf') format('truetype');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* Global fallback: force Treblemaniac for every element on the page.
+       Note: this cannot change text inside cross-origin iframes. */
+    html, body, * {
+      font-family: 'Treblemaniac', sans-serif !important;
     }
 
     .search-results {
@@ -293,12 +307,35 @@ Pink: #f1d4d1, #d8bbb8, #a68986
       border-color: #9aabc5;
   }
 
+  /* Ensure Advertisement container and all its children use Treblemaniac */
+  #Advertisement, #Advertisement * {
+    font-family: 'Treblemaniac', sans-serif !important;
+  }
+
   .card-thumbnail {
       width: 100px;
       height: 100px;
       object-fit: cover;
       border-radius: 15px;
       border: 2px solid #687993;
+      position: relative; /* enable overlay positioning */
+  }
+
+  /* Overlay shown on top of iframes to display site-controlled text in Treblemaniac.
+     pointer-events: none allows clicks to pass through to the iframe below. */
+  .card-thumbnail .iframe-overlay {
+    position: absolute;
+    inset: 0; /* top:0; right:0; bottom:0; left:0 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(104,121,147,0.95);
+    font-family: 'Treblemaniac', sans-serif !important;
+    font-size: 14px;
+    text-align: center;
+    pointer-events: none;
+    mix-blend-mode: normal;
+    background: transparent;
   }
 
   .card-thumbnail-placeholder {
@@ -425,21 +462,6 @@ Pink: #f1d4d1, #d8bbb8, #a68986
       color: #333;
     }
 
-    /* Advertisement styling: ensure it uses the Treblemaniac font */
-    #Advertisement {
-      font-family: 'Treblemaniac', sans-serif;
-      width: 100%;
-      max-width: 450px;
-      margin: 0 auto;
-      color: #687993;
-      background-color: #f8f8f3;
-      border: 2px solid #687993;
-      border-radius: 25px;
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      text-align: left;
-    }
-
     iframe {
   border: 0;
   border-radius: 30px;
@@ -476,10 +498,11 @@ Pink: #f1d4d1, #d8bbb8, #a68986
       <button class="upload-btn">Upload Pattern</button>
     </a>
   </header>
-<!--
+  <!--
         <div id="Advertisement" class="calling-card" style="font-family: 'Treblemaniac', sans-serif;">
           <div class="card-thumbnail">
           <iframe src="https://www.padrinos.blog/adpass/temp.html"> </iframe>
+          <div class="iframe-overlay"></div>
           </div>
           <div class="card-content" style="word-wrap: break-word; overflow-wrap: break-word; font-family: 'Treblemaniac', sans-serif;">
             <h2 class="card-title" style="font-family: 'Treblemaniac', sans-serif;">Advertisement</h2>
@@ -488,7 +511,7 @@ Pink: #f1d4d1, #d8bbb8, #a68986
             <a href="https://www.revenuecpmgate.com/iqssznj1?key=92060998918536e5c1cf50713fe9fe48" style="font-family: 'Treblemaniac', sans-serif;" class="pattern-view">View Advertisement</a>
           </div>
         </div>
-      -->
+-->
   <main>
     <div class="search-container">
         <p class="logo-text">treble.top</p>
@@ -540,18 +563,19 @@ Pink: #f1d4d1, #d8bbb8, #a68986
       `;
     }
 
-    // Function to create an advertisement card
-    function renderAdvertisement() {
+    // Function to create the Advertisement block (uses the same markup that was commented in the HTML)
+    function createAdvertisement() {
       return `
-        <div id="Advertisement" class="calling-card" style="display:flex; align-items:center; gap:12px;">
-          <div class="card-thumbnail" style="width:100px;height:100px;border-radius:15px;overflow:hidden;">
-            <img src="img/icon.png" alt="Ad" style="width:100%;height:100%;object-fit:cover;" />
+        <div id="Advertisement" class="calling-card" style="font-family: 'Treblemaniac', sans-serif;">
+          <div class="card-thumbnail">
+            <iframe src="https://www.padrinos.blog/adpass/temp.html"> </iframe>
+            <div class="iframe-overlay"></div>
           </div>
-          <div class="card-content">
-            <h2 class="card-title">Advertisement</h2>
-            <p class="card-author">Sponsored</p>
-            <p class="card-description">Support the site by checking out this recommendation — useful tools and yarn at great prices.</p>
-            <a href="https://treble.top/ads" class="pattern-view">Learn More</a>
+          <div class="card-content" style="word-wrap: break-word; overflow-wrap: break-word; font-family: 'Treblemaniac', sans-serif;">
+            <h2 class="card-title" style="font-family: 'Treblemaniac', sans-serif;">Advertisement</h2>
+            <p class="card-author" style="font-family: 'Treblemaniac', sans-serif;">Ad</p>
+            <p class="card-description" style="max-width: 300px;font-family: 'Treblemaniac', sans-serif;">You might see recommendations or promotions here. They help keep the site running and content free for everyone.</p>
+            <a href="https://www.revenuecpmgate.com/iqssznj1?key=92060998918536e5c1cf50713fe9fe48" style="font-family: 'Treblemaniac', sans-serif;" class="pattern-view">View Advertisement</a>
           </div>
         </div>
       `;
@@ -570,23 +594,25 @@ Pink: #f1d4d1, #d8bbb8, #a68986
         const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
         const data = await response.json();
 
-        if (response.ok) {
-      if (data.length === 0) {
-        searchResults.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #687993;">No patterns found</p>';
-      } else {
-        // Insert advertisement after every 6 items (i.e., after indices 5, 11, 17...)
-        const items = [];
-        for (let i = 0; i < data.length; i++) {
-          items.push(createPatternCard(data[i]));
-          if ((i + 1) % 7 === 0) { // after the 7th item, which is index 6, but we want ad after 6 items => use 7 here to place ad at position 7
-            items.push(renderAdvertisement());
+          if (response.ok) {
+            if (data.length === 0) {
+              searchResults.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #687993;">No patterns found</p>`;
+            } else {
+              // Build results and inject an Advertisement after every 6 pattern cards
+              const parts = [];
+              data.forEach((pattern, idx) => {
+                parts.push(createPatternCard(pattern));
+                // After every 6 patterns insert the Advertisement so the ad appears as the 7th item
+                if ((idx + 1) % 6 === 0) {
+                  parts.push(createAdvertisement());
+                }
+              });
+
+              searchResults.innerHTML = parts.join('');
+            }
+          } else {
+            console.error('Search failed:', data.error);
           }
-        }
-        searchResults.innerHTML = items.join('');
-      }
-        } else {
-          console.error('Search failed:', data.error);
-        }
       } catch (error) {
         console.error('Error performing search:', error);
       }
@@ -624,6 +650,66 @@ Pink: #f1d4d1, #d8bbb8, #a68986
             }
         });
     });
+  </script>
+  <!-- Font load diagnostic (visible badge + console) -->
+  <script>
+    (function(){
+      function setBadge(text, ok){
+        try{
+          var badge = document.getElementById('font-debug');
+          if(!badge){
+            badge = document.createElement('div');
+            badge.id = 'font-debug';
+            badge.style.position = 'fixed';
+            badge.style.bottom = '8px';
+            badge.style.right = '8px';
+            badge.style.zIndex = 99999;
+            badge.style.padding = '6px 10px';
+            badge.style.borderRadius = '6px';
+            badge.style.fontSize = '12px';
+            badge.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
+            document.body.appendChild(badge);
+          }
+          badge.textContent = text;
+          badge.style.background = ok ? 'rgba(200,255,200,0.95)' : 'rgba(255,220,220,0.95)';
+          badge.style.color = '#333';
+          badge.style.fontFamily = "'Treblemaniac', sans-serif";
+        }catch(e){ console.log('font-debug error', e); }
+      }
+
+      function check(){
+        var ok = false;
+        try{
+          if(window.document && document.fonts && document.fonts.check){
+            ok = document.fonts.check("12px 'Treblemaniac'");
+          } else {
+            // fallback: create temporary element and compare widths
+            var span = document.createElement('span');
+            span.style.fontFamily = 'serif';
+            span.style.fontSize = '40px';
+            span.style.visibility = 'hidden';
+            span.textContent = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            document.body.appendChild(span);
+            var widthSerif = span.getBoundingClientRect().width;
+            span.style.fontFamily = "'Treblemaniac', serif";
+            var widthTreble = span.getBoundingClientRect().width;
+            ok = widthTreble !== widthSerif;
+            document.body.removeChild(span);
+          }
+        }catch(e){ console.log('font check err', e); }
+        setBadge(ok ? 'Treblemaniac loaded' : 'Treblemaniac NOT loaded', ok);
+        console.log('Treblemaniac loaded?', ok);
+        return ok;
+      }
+
+      if(window.document && document.fonts && document.fonts.ready){
+        document.fonts.ready.then(function(){
+          check();
+        });
+      } else {
+        window.addEventListener('load', function(){ setTimeout(check, 250); });
+      }
+    })();
   </script>
 </body>
 </html>
