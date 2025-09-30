@@ -667,12 +667,9 @@ Pink: #f1d4d1, #d8bbb8, #a68986
             badge.style.padding = '6px 10px';
             badge.style.borderRadius = '6px';
             badge.style.fontSize = '12px';
-            badge.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
             document.body.appendChild(badge);
           }
           badge.textContent = text;
-          badge.style.background = ok ? 'rgba(200,255,200,0.95)' : 'rgba(255,220,220,0.95)';
-          badge.style.color = '#333';
           badge.style.fontFamily = "'Treblemaniac', sans-serif";
         }catch(e){ console.log('font-debug error', e); }
       }
