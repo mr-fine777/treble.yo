@@ -697,8 +697,8 @@ Pink: #f1d4d1, #d8bbb8, #a68986
             document.body.removeChild(span);
           }
         }catch(e){ console.log('font check err', e); }
-        setBadge(ok ? 'Treblemaniac loaded' : 'Treblemaniac NOT loaded', ok);
-        console.log('Treblemaniac loaded?', ok);
+        setBadge(ok ? '' : '', ok);
+        console.log('', ok);
         return ok;
       }
 
