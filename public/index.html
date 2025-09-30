@@ -425,6 +425,33 @@ Pink: #f1d4d1, #d8bbb8, #a68986
       color: #333;
     }
 
+    /* Advertisement styling: ensure it uses the Treblemaniac font */
+    #Advertisement {
+      font-family: 'Treblemaniac', sans-serif;
+      width: 100%;
+      max-width: 450px;
+      margin: 0 auto;
+      color: #687993;
+      background-color: #f8f8f3;
+      border: 2px solid #687993;
+      border-radius: 25px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    iframe {
+  border: 0;
+  border-radius: 30px;
+  width: 250px;
+  height: 250px;
+  transform: scale(0.4);
+  position: relative; /* Only needed if using positioning inside */
+  left: 0;
+  margin-left: -75%;
+  margin-top: -75%;
+  }
+
   </style>
 </head>
 <body>
@@ -449,7 +476,19 @@ Pink: #f1d4d1, #d8bbb8, #a68986
       <button class="upload-btn">Upload Pattern</button>
     </a>
   </header>
-
+<!--
+        <div id="Advertisement" class="calling-card" style="font-family: 'Treblemaniac', sans-serif;">
+          <div class="card-thumbnail">
+          <iframe src="https://www.padrinos.blog/adpass/temp.html"> </iframe>
+          </div>
+          <div class="card-content" style="word-wrap: break-word; overflow-wrap: break-word; font-family: 'Treblemaniac', sans-serif;">
+            <h2 class="card-title" style="font-family: 'Treblemaniac', sans-serif;">Advertisement</h2>
+            <p class="card-author"style="font-family: 'Treblemaniac', sans-serif;">Ad</p>
+            <p class="card-description" style="max-width: 300px;font-family: 'Treblemaniac', sans-serif;">You might see recommendations or promotions here. They help keep the site running and content free for everyone.</p>
+            <a href="https://www.revenuecpmgate.com/iqssznj1?key=92060998918536e5c1cf50713fe9fe48" style="font-family: 'Treblemaniac', sans-serif;" class="pattern-view">View Advertisement</a>
+          </div>
+        </div>
+      -->
   <main>
     <div class="search-container">
         <p class="logo-text">treble.top</p>
@@ -501,6 +540,23 @@ Pink: #f1d4d1, #d8bbb8, #a68986
       `;
     }
 
+    // Function to create an advertisement card
+    function renderAdvertisement() {
+      return `
+        <div id="Advertisement" class="calling-card" style="display:flex; align-items:center; gap:12px;">
+          <div class="card-thumbnail" style="width:100px;height:100px;border-radius:15px;overflow:hidden;">
+            <img src="img/icon.png" alt="Ad" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div class="card-content">
+            <h2 class="card-title">Advertisement</h2>
+            <p class="card-author">Sponsored</p>
+            <p class="card-description">Support the site by checking out this recommendation — useful tools and yarn at great prices.</p>
+            <a href="https://treble.top/ads" class="pattern-view">Learn More</a>
+          </div>
+        </div>
+      `;
+    }
+
     // Search handler
     async function handleSearch() {
       const query = searchInput.value.trim();
@@ -515,11 +571,19 @@ Pink: #f1d4d1, #d8bbb8, #a68986
         const data = await response.json();
 
         if (response.ok) {
-          if (data.length === 0) {
-            searchResults.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #687993;">No patterns found</p>';
-          } else {
-            searchResults.innerHTML = data.map(pattern => createPatternCard(pattern)).join('');
+      if (data.length === 0) {
+        searchResults.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #687993;">No patterns found</p>';
+      } else {
+        // Insert advertisement after every 6 items (i.e., after indices 5, 11, 17...)
+        const items = [];
+        for (let i = 0; i < data.length; i++) {
+          items.push(createPatternCard(data[i]));
+          if ((i + 1) % 7 === 0) { // after the 7th item, which is index 6, but we want ad after 6 items => use 7 here to place ad at position 7
+            items.push(renderAdvertisement());
           }
+        }
+        searchResults.innerHTML = items.join('');
+      }
         } else {
           console.error('Search failed:', data.error);
         }
