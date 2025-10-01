@@ -474,6 +474,66 @@ Pink: #f1d4d1, #d8bbb8, #a68986
   margin-top: -75%;
   }
 
+  .page-navigator {
+  margin-top: 30px;
+  display: flex; /* lay items out left-to-right */
+  align-items: center; /* vertical center the children */
+  justify-content: center; /* center the whole navigator horizontally */
+  gap: 12px; /* spacing between buttons and identity */
+  padding: 6px 0;
+}
+
+.left-button img,
+.right-button img{
+  height: 24px;
+  display: block;
+}
+
+.left-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8f3;
+  padding: 10px;
+  border: 2px solid #687993;
+  border-radius: 100px;
+}
+
+.right-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8f3;
+  padding: 10px;
+  border: 2px solid #687993;
+  border-radius: 100px;
+}
+
+/* Disabled state for navigator buttons */
+.left-button.disabled,
+.right-button.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.page-identity {
+  color: #687993;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8f3;
+  padding: 20px 20px;
+  border: 2px solid #687993;
+  border-radius: 100px;
+  font-weight: bold;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+.font-post {
+  font-family: 'Treblemaniac', sans-serif;
+}
+
   </style>
 </head>
 <body>
@@ -529,127 +589,238 @@ Pink: #f1d4d1, #d8bbb8, #a68986
       <!-- Search results will be dynamically inserted here -->
     </div>
   </div>
+  <div class="page-navigator">
+  <div class="left-button">
+<img src="img/larw.png">
+</div>
+     <div class="page-identity">
+  <p class="font-post">1</p>
+</div>
+   <div class="right-button">
+<img src="img/rawr.png">
+</div>
+     </div>
 
   <script>
-    const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('searchResults');
-    let searchTimeout;
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  const pageNavigator = document.querySelector('.page-navigator');
+  const pageIdentity = document.querySelector('.page-identity .font-post');
+  const leftButton = document.querySelector('.left-button');
+  const rightButton = document.querySelector('.right-button');
 
-    // Debounce function to prevent too many API calls
-    function debounce(func, wait) {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(func, wait);
-    }
+  let searchTimeout;
+  let allItems = []; // flattened list of HTML strings (patterns + ads)
+  let pages = []; // array of pages, each page is array of html strings
+  let currentPage = 0;
+  const ITEMS_PER_PAGE = 21; // include ads in this count
 
-    // Function to create a pattern card
-    function createPatternCard(pattern) {
-      const truncatedDescription = pattern.description.length > 152 
-        ? pattern.description.substring(0, 152) + '...'
-        : pattern.description;
-      
-      return `
-        <div class="calling-card">
-          ${pattern.thumbnailUrl ? 
-            `<img src="${pattern.thumbnailUrl}" alt="${pattern.patternName}" class="card-thumbnail">` :
-            `<div class="card-thumbnail-placeholder">No thumbnail available</div>`
-          }
-          <div class="card-content" style="word-wrap: break-word; overflow-wrap: break-word;">
-            <h2 class="card-title">${pattern.patternName}</h2>
-            <p class="card-author">By ${pattern.authorName}</p>
-            <p class="card-description" style="max-width: 300px;">${truncatedDescription}</p>
-            <a href="view-post.html?slug=${pattern.slug}" class="pattern-view">View Pattern</a>
-          </div>
+  // Debounce helper
+  function debounce(func, wait) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(func, wait);
+  }
+
+  // Creates a pattern card HTML string
+  function createPatternCard(pattern) {
+    const truncatedDescription = (pattern.description || '').length > 152
+      ? pattern.description.substring(0, 152) + '...'
+      : (pattern.description || '');
+
+    return `
+      <div class="calling-card">
+        ${pattern.thumbnailUrl ?
+          `<img src="${pattern.thumbnailUrl}" alt="${escapeHtml(pattern.patternName)}" class="card-thumbnail">` :
+          `<div class="card-thumbnail-placeholder">No thumbnail available</div>`
+        }
+        <div class="card-content" style="word-wrap: break-word; overflow-wrap: break-word;">
+          <h2 class="card-title">${escapeHtml(pattern.patternName)}</h2>
+          <p class="card-author">By ${escapeHtml(pattern.authorName || 'Unknown')}</p>
+          <p class="card-description" style="max-width: 300px;">${escapeHtml(truncatedDescription)}</p>
+          <a href="view-post.html?slug=${encodeURIComponent(pattern.slug)}" class="pattern-view">View Pattern</a>
         </div>
-      `;
-    }
+      </div>
+    `;
+  }
 
-    // Function to create the Advertisement block (uses the same markup that was commented in the HTML)
-    function createAdvertisement() {
-      return `
-        <div id="Advertisement" class="calling-card" style="font-family: 'Treblemaniac', sans-serif;">
-          <div class="card-thumbnail">
-            <iframe src="https://www.padrinos.blog/adpass/temp.html"> </iframe>
-            <div class="iframe-overlay"></div>
-          </div>
-          <div class="card-content" style="word-wrap: break-word; overflow-wrap: break-word; font-family: 'Treblemaniac', sans-serif;">
-            <h2 class="card-title" style="font-family: 'Treblemaniac', sans-serif;">Advertisement</h2>
-            <p class="card-author" style="font-family: 'Treblemaniac', sans-serif;">Ad</p>
-            <p class="card-description" style="max-width: 300px;font-family: 'Treblemaniac', sans-serif;">You might see recommendations or promotions here. They help keep the site running and content free for everyone.</p>
-            <a href="https://www.revenuecpmgate.com/iqssznj1?key=92060998918536e5c1cf50713fe9fe48" style="font-family: 'Treblemaniac', sans-serif;" class="pattern-view">View Advertisement</a>
-          </div>
+  // Create advertisement HTML
+  function createAdvertisement() {
+    return `
+      <div id="Advertisement" class="calling-card" style="font-family: 'Treblemaniac', sans-serif;">
+        <div class="card-thumbnail">
+          <iframe src="https://www.padrinos.blog/adpass/temp.html"> </iframe>
+          <div class="iframe-overlay"></div>
         </div>
-      `;
+        <div class="card-content" style="word-wrap: break-word; overflow-wrap: break-word; font-family: 'Treblemaniac', sans-serif;">
+          <h2 class="card-title" style="font-family: 'Treblemaniac', sans-serif;">Advertisement</h2>
+          <p class="card-author" style="font-family: 'Treblemaniac', sans-serif;">Ad</p>
+          <p class="card-description" style="max-width: 300px;font-family: 'Treblemaniac', sans-serif;">You might see recommendations or promotions here. They help keep the site running and content free for everyone.</p>
+          <a href="https://www.revenuecpmgate.com/iqssznj1?key=92060998918536e5c1cf50713fe9fe48" style="font-family: 'Treblemaniac', sans-serif;" class="pattern-view">View Advertisement</a>
+        </div>
+      </div>
+    `;
+  }
+
+  // Escape helper to avoid basic HTML injection
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, function (s) {
+      return ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[s];
+    });
+  }
+
+  // Build the flattened list of items (patterns + inserted ads every 7th column -> every 7th item)
+  function buildItemsWithAds(patterns) {
+    const parts = [];
+    patterns.forEach((pattern, idx) => {
+      parts.push(createPatternCard(pattern));
+      // Insert an ad after every 6 patterns so the ad appears as the 7th item
+      if ((idx + 1) % 6 === 0) {
+        parts.push(createAdvertisement());
+      }
+    });
+    return parts;
+  }
+
+  // Partition into pages of ITEMS_PER_PAGE
+  function paginateItems(items) {
+    const result = [];
+    for (let i = 0; i < items.length; i += ITEMS_PER_PAGE) {
+      result.push(items.slice(i, i + ITEMS_PER_PAGE));
+    }
+    return result;
+  }
+
+  // Render a page index
+  function renderPage(pageIndex) {
+    currentPage = pageIndex;
+    const page = pages[pageIndex] || [];
+    if (page.length === 0) {
+      searchResults.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #687993;">No patterns found</p>`;
+    } else {
+      searchResults.innerHTML = page.join('');
     }
 
-    // Search handler
-    async function handleSearch() {
-      const query = searchInput.value.trim();
-      
-      if (query.length === 0) {
-        searchResults.innerHTML = '';
+    // Update navigator visibility
+    if (pageNavigator) pageNavigator.style.display = (allItems.length > 0) ? 'flex' : 'none';
+
+    // Update page number display (1-based)
+    if (pageIdentity) pageIdentity.textContent = String(pageIndex + 1);
+
+    // Enable/disable buttons
+    updateNavButtons();
+  }
+
+  function updateNavButtons() {
+    // Left disabled when on first page
+    if (currentPage <= 0) {
+      leftButton.classList.add('disabled');
+    } else {
+      leftButton.classList.remove('disabled');
+    }
+
+    // Right disabled when on last page
+    if (currentPage >= pages.length - 1) {
+      rightButton.classList.add('disabled');
+    } else {
+      rightButton.classList.remove('disabled');
+    }
+  }
+
+  // Handler for searching and preparing pagination
+  async function handleSearch() {
+    const query = searchInput.value.trim();
+
+    // If query empty: clear
+    if (query.length === 0) {
+      searchResults.innerHTML = '';
+      allItems = [];
+      pages = [];
+      currentPage = 0;
+      if (pageNavigator) pageNavigator.style.display = 'none';
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Search failed:', data.error || response.statusText);
         return;
       }
 
-      try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-        const data = await response.json();
+      // Build items and pages
+      allItems = buildItemsWithAds(Array.isArray(data) ? data : []);
+      pages = paginateItems(allItems);
+      currentPage = 0;
 
-          if (response.ok) {
-            if (data.length === 0) {
-              searchResults.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #687993;">No patterns found</p>`;
-            } else {
-              // Build results and inject an Advertisement after every 6 pattern cards
-              const parts = [];
-              data.forEach((pattern, idx) => {
-                parts.push(createPatternCard(pattern));
-                // After every 6 patterns insert the Advertisement so the ad appears as the 7th item
-                if ((idx + 1) % 6 === 0) {
-                  parts.push(createAdvertisement());
-                }
-              });
+      renderPage(currentPage);
 
-              searchResults.innerHTML = parts.join('');
-            }
-          } else {
-            console.error('Search failed:', data.error);
-          }
-      } catch (error) {
-        console.error('Error performing search:', error);
+    } catch (err) {
+      console.error('Error performing search:', err);
+    }
+  }
+
+  // Wire up navigation buttons
+  function setupNavigation() {
+    if (!leftButton || !rightButton) return;
+
+    leftButton.addEventListener('click', () => {
+      if (currentPage > 0) {
+        renderPage(currentPage - 1);
       }
+    });
+
+    rightButton.addEventListener('click', () => {
+      if (currentPage < pages.length - 1) {
+        renderPage(currentPage + 1);
+      }
+    });
+  }
+
+  // Initialize on DOM ready
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchButton = document.querySelector('.search-button');
+    if (pageNavigator) pageNavigator.style.display = 'none';
+
+    // input debounce
+    searchInput.addEventListener('input', () => debounce(handleSearch, 300));
+
+    // Enter key
+    searchInput.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleSearch();
+      }
+    });
+
+    if (searchButton) {
+      searchButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        handleSearch();
+      });
     }
 
-    // Initialize search on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const searchButton = document.querySelector('.search-button');
-        
-        // Add event listener with debounce for input changes
-        searchInput.addEventListener('input', () => {
-            debounce(handleSearch, 300);
-        });
-
-        // Trigger search on Enter key press
-        searchInput.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault(); // Prevent form submission
-                handleSearch();
-            }
-        });
-
-        // Trigger search on button click
-        if (searchButton) {
-            searchButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                handleSearch();
-            });
-        }
-        
-        // Clear results when input is cleared
-        searchInput.addEventListener('change', () => {
-            if (!searchInput.value.trim()) {
-                searchResults.innerHTML = '';
-            }
-        });
+    // Clear results when input cleared
+    searchInput.addEventListener('change', () => {
+      if (!searchInput.value.trim()) {
+        searchResults.innerHTML = '';
+        allItems = [];
+        pages = [];
+        currentPage = 0;
+        if (pageNavigator) pageNavigator.style.display = 'none';
+      }
     });
+
+    setupNavigation();
+  });
   </script>
   <!-- Font load diagnostic (visible badge + console) -->
   <script>
@@ -666,13 +837,10 @@ Pink: #f1d4d1, #d8bbb8, #a68986
             badge.style.zIndex = 99999;
             badge.style.padding = '6px 10px';
             badge.style.borderRadius = '6px';
-            badge.style.fontSize = '12px';
-            badge.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
+            badge.style.fontSize = '0px';
             document.body.appendChild(badge);
           }
           badge.textContent = text;
-          badge.style.background = ok ? 'rgba(200,255,200,0.95)' : 'rgba(255,220,220,0.95)';
-          badge.style.color = '#333';
           badge.style.fontFamily = "'Treblemaniac', sans-serif";
         }catch(e){ console.log('font-debug error', e); }
       }
@@ -697,8 +865,8 @@ Pink: #f1d4d1, #d8bbb8, #a68986
             document.body.removeChild(span);
           }
         }catch(e){ console.log('font check err', e); }
-        setBadge(ok ? 'Treblemaniac loaded' : 'Treblemaniac NOT loaded', ok);
-        console.log('Treblemaniac loaded?', ok);
+        setBadge(ok ? '' : '', ok);
+        console.log('', ok);
         return ok;
       }
 
