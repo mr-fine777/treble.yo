@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Block internal or backend folders (not meant for public view)
+Disallow: /api/
+Disallow: /local/
+Disallow: /badwords.txt
+
+# Sitemap helps crawlers find your pages fast
+Sitemap: https://treble.top/sitemap.xml
+
+# Extra hints for good SEO hygiene
+User-agent: Googlebot
+Allow: /$
+
+# Optional: make sure ad services can verify ads.txt
+Allow: /ads.txt
